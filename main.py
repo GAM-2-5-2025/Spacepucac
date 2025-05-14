@@ -1,26 +1,40 @@
 import pygame
 
 pygame.init()
-#namjestit prozor velicine
+
 window_width = 1000
 window_height = 700
-game_display = pygame.display.set_mode((window_width, window_height))
-#pozadina
-pozadina = pygame.image.load('pozadina.png')
 
-#pocetna pozicija
-y = 0
+
+pygame.display.set_mode((window_width, window_height))
+screen = pygame.display.set_mode((window_width, window_height))
+
+pozadina = pygame.image.load('pozadina.png').convert()
+
+pozadina = pygame.transform.scale(pozadina, screen.get_size())
+
 #glavno
-running = True
-while running:
+run = True
+x=0
+y=0
+vrhy=-window_height
+while run:
+    screen.fill((0,0,0))
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
-    #pomicanje pozadine
-    y -=0.5
-    #resetiranje slike
-    if y == -1 * pozadina.get_height():
-        y = 0
-    game_display.blit(pozadina, (0, y))
+            run = False
+
+    y=y+0.1
+    vrhy = vrhy+0.1
+    screen.blit(pozadina,(x,y))
+    screen.blit(pozadina,(x,vrhy))
+    if vrhy>=0:
+        y=0
+        vrhy=-window_height
+        
+
     pygame.display.update()
+
+
 pygame.quit()

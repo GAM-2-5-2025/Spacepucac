@@ -1,25 +1,25 @@
 import pygame
-import sys
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos,constraint,speed):
+    def __init__(self, pos, constraint, speed):
         super().__init__()
         self.image = pygame.image.load('igrac.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (50, 50))
-        self.rect = self.image.get_rect(midbottom = pos)
+        self.rect = self.image.get_rect(midbottom=pos)
         self.speed = speed
-        self.max_x= constraint
+        self.max_x = constraint
+        self.health = 3
         self.ready = True
         self.laser_time = 0
         self.laser_cooldown = 600
-        
+        self.lasers = pygame.sprite.Group()
 
     def get_input(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT]:
             self.rect.x += self.speed
         elif keys[pygame.K_LEFT]:
-            self.rect.x -=self.speed
+            self.rect.x -= self.speed
         if keys[pygame.K_SPACE] and self.ready:
             self.shoot()
             self.ready = False
@@ -30,22 +30,32 @@ class Player(pygame.sprite.Sprite):
             current_time = pygame.time.get_ticks()
             if current_time - self.laser_time >= self.laser_cooldown:
                 self.ready = True
-                
-                
 
     def constraint(self):
-        if self.rect.left <=0:
+        if self.rect.left <= 0:
             self.rect.left = 0
-        if self.rect.right >=self.max_x:
+        if self.rect.right >= self.max_x:
             self.rect.right = self.max_x
 
     def shoot(self):
-        print('sutaj!!!')
-    
+        print("JAO")
+
     def update(self):
         self.get_input()
         self.constraint()
         self.recharge()
-        
+        self.lasers.update()
 
-        
+
+class Laser(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+        self.image = pygame.image.load('laser.png').convert_alpha()
+        self.image = pygame.transform.scale(self.image, (10, 30))
+        self.rect = self.image.get_rect(center=(x, y))
+        self.speed = -5
+
+    def update(self):
+        self.rect.y += self.speed
+        if self.rect.bottom < 0:
+            self.kill()

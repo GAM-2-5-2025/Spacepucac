@@ -46,6 +46,8 @@ class Game:
         self.objects.update()
         self.objects.draw(screen)
         self.check_collisions()
+        self.player.sprite.lasers.update()
+        self.player.sprite.lasers.draw(screen)
 
 
 if __name__ == '__main__':

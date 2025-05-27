@@ -39,6 +39,8 @@ class Player(pygame.sprite.Sprite):
 
     def shoot(self):
         print("JAO")
+        laser = Laser(self.rect.centerx, self.rect.top)
+        self.lasers.add(laser)
 
     def update(self):
         self.get_input()

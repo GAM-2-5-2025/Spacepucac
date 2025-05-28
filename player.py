@@ -4,11 +4,12 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos, constraint, speed):
         super().__init__()
         self.image = pygame.image.load('igrac.png').convert_alpha()
-        self.image = pygame.transform.scale(self.image, (50, 50))
+        self.image = pygame.transform.scale(self.image, (70, 70))
         self.rect = self.image.get_rect(midbottom=pos)
         self.speed = speed
         self.max_x = constraint
         self.health = 3
+        self.bodovi = 0
         self.ready = True
         self.laser_time = 0
         self.laser_cooldown = 600
@@ -38,7 +39,6 @@ class Player(pygame.sprite.Sprite):
             self.rect.right = self.max_x
 
     def shoot(self):
-        print("JAO")
         laser = Laser(self.rect.centerx, self.rect.top)
         self.lasers.add(laser)
 

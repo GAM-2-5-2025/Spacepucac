@@ -7,9 +7,9 @@ class Objekti(pygame.sprite.Sprite):
     def __init__(self, window_width):
         super().__init__()
         self.image = pygame.image.load('meteor.png').convert_alpha()
-        self.image = pygame.transform.scale(self.image, (60, 60))
+        self.image = pygame.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect(midtop=(random.randint(0, window_width), -30))
-        self.speed = 1
+        self.speed = random.randint(2, 10)
 
     def update(self):
         self.rect.y += self.speed
@@ -25,7 +25,7 @@ class Game:
 
     def stvori_objekt(self):
         current_time = pygame.time.get_ticks()
-        if current_time - self.spawn_timer > 1000:
+        if current_time - self.spawn_timer > 500:
             self.objects.add(Objekti(window_width))
             self.spawn_timer = current_time
 
@@ -34,6 +34,12 @@ class Game:
             self.player.sprite.health -= 1
             if self.player.sprite.health <= 0:
                 self.end_game()
+    def check_laser_collisions(self):
+        for laser in self.player.sprite.lasers:
+            collided_objects = pygame.sprite.spritecollide(laser, self.objects, True)
+            if collided_objects:
+                self.player.sprite.bodovi += 10
+                laser.kill()
 
     def end_game(self):
         pygame.quit()
@@ -46,6 +52,7 @@ class Game:
         self.objects.update()
         self.objects.draw(screen)
         self.check_collisions()
+        self.check_laser_collisions()
         self.player.sprite.lasers.update()
         self.player.sprite.lasers.draw(screen)
 
@@ -85,7 +92,9 @@ if __name__ == '__main__':
         font = pygame.font.SysFont("Arial", 30)
         
         text = font.render(f"Zdravlje: {game.player.sprite.health}", True, text_color)
+        textbod = font.render(f"Bodovi: {game.player.sprite.bodovi}", True, text_color)
         screen.blit(text, (10, 10))
+        screen.blit(textbod, (550, 10))
 
         game.run()
 
